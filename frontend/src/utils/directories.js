@@ -30,8 +30,8 @@ export function middleTruncate(str, n) {
   const adjustedEndLength = extension
     ? endLength - Math.floor(extension.length / 2)
     : endLength;
-  const truncated =
-    nameWithoutExtension.substr(0, adjustedStartLength) +
+  const truncated = `${nameWithoutExtension.slice(0, adjustedStartLength)}...${nameWithoutExtension.slice(-adjustedEndLength)}`;
+  return `${truncated}${extension}`;
     "..." +
     nameWithoutExtension.slice(-adjustedEndLength);
   return truncated + extension;
