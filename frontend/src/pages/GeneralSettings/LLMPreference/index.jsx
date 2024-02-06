@@ -80,21 +80,21 @@ export default function GeneralLLMPreference() {
     setFilteredLLMs(filtered);
   }, [searchQuery, selectedLLM]);
 
+  function createLLMProvider(name, value, logo, options, description) {
+    return {
+      name: name,
+      value: value,
+      logo: logo,
+      options: options,
+      description: description
+    };
+  }
+  
   const LLMS = [
-    {
-      name: "OpenAI",
-      value: "openai",
-      logo: OpenAiLogo,
-      options: <OpenAiOptions settings={settings} />,
-      description: "The standard option for most non-commercial use.",
-    },
-    {
-      name: "Azure OpenAI",
-      value: "azure",
-      logo: AzureOpenAiLogo,
-      options: <AzureAiOptions settings={settings} />,
-      description: "The enterprise option of OpenAI hosted on Azure services.",
-    },
+    createLLMProvider("OpenAI", "openai", OpenAiLogo, <OpenAiOptions settings={settings} />, "The standard option for most non-commercial use."),
+    createLLMProvider("Azure OpenAI", "azure", AzureOpenAiLogo, <AzureAiOptions settings={settings} />, "The enterprise option of OpenAI hosted on Azure services."),
+    // ... other providers
+  ];
     {
       name: "Anthropic",
       value: "anthropic",
