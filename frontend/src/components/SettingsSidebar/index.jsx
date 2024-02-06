@@ -42,11 +42,11 @@ export default function SettingsSidebar() {
 
   return (
     <>
-      <div
-        ref={sidebarRef}
-        style={{ height: "calc(100% - 32px)" }}
-        className="transition-all duration-500 relative m-[16px] rounded-[26px] bg-sidebar border-4 border-accent min-w-[250px] p-[18px]"
-      >
+      import styles from './SettingsSidebar.module.css';
+      
+      ...
+      
+      <div ref={sidebarRef} className={styles.sidebar}>
         <div className="w-full h-full flex flex-col overflow-x-hidden items-between">
           {/* Header Information */}
           <div className="flex w-full items-center justify-between">
