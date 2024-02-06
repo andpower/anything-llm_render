@@ -392,26 +392,19 @@ function handleStreamResponses(response, stream, responseProps) {
           ?.toString()
           ?.split("\n")
           .filter((line) => line.trim() !== "");
-
+  
         for (const line of lines) {
           let validJSON = false;
           const message = chunk + line.replace(/^data:/, "");
           if (message !== "[DONE]") {
-            // JSON chunk is incomplete and has not ended yet
-            // so we need to stitch it together. You would think JSON
-            // chunks would only come complete - but they don't!
             try {
               JSON.parse(message);
               validJSON = true;
             } catch {
               console.log("Failed to parse message", message);
             }
-
+  
             if (!validJSON) {
-              // It can be possible that the chunk decoding is running away
-              // and the message chunk fails to append due to string length.
-              // In this case abort the chunk and reset so we can continue.
-              // ref: https://github.com/Mintplex-Labs/anything-llm/issues/416
               try {
                 chunk += message;
               } catch (e) {
@@ -423,7 +416,7 @@ function handleStreamResponses(response, stream, responseProps) {
               chunk = "";
             }
           }
-
+  
           if (message == "[DONE]") {
             writeResponseChunk(response, {
               uuid,
@@ -446,7 +439,7 @@ function handleStreamResponses(response, stream, responseProps) {
             } catch {
               continue;
             }
-
+  
             if (!!error) {
               writeResponseChunk(response, {
                 uuid,
@@ -459,7 +452,7 @@ function handleStreamResponses(response, stream, responseProps) {
               resolve("");
               return;
             }
-
+  
             if (token) {
               fullText += token;
               writeResponseChunk(response, {
@@ -471,7 +464,7 @@ function handleStreamResponses(response, stream, responseProps) {
                 error: false,
               });
             }
-
+  
             if (finishReason !== null) {
               writeResponseChunk(response, {
                 uuid,
@@ -481,6 +474,13 @@ function handleStreamResponses(response, stream, responseProps) {
                 close: true,
                 error: false,
               });
+              resolve(fullText);
+            }
+          }
+        }
+      });
+    });
+  }
               resolve(fullText);
             }
           }
