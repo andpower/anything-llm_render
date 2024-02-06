@@ -777,7 +777,7 @@ function systemEndpoints(app) {
         response.json({ success: true });
       } catch (e) {
         console.error(e);
-        response.sendStatus(500).end();
+        response.status(500).json({ success: false, error: e.message });
       }
     }
   );
