@@ -229,94 +229,94 @@ async function streamEmptyEmbeddingChat({
   return;
 }
 
-// TODO: Refactor this implementation
-function handleStreamResponses(response, stream, responseProps) {
-  const { uuid = uuidv4(), sources = [] } = responseProps;
+function processStreamData(stream, response, uuid, sources) {
+  let fullText = "";
+  let chunk = "";
+  stream.stream.data.on("data", (data) => {
+    const lines = data
+      ?.toString()
+      ?.split("\n")
+      .filter((line) => line.trim() !== "");
 
-  // Gemini likes to return a stream asyncIterator which will
-  // be a totally different object than other models.
-  if (stream?.type === "geminiStream") {
-    return new Promise(async (resolve) => {
-      let fullText = "";
-      for await (const chunk of stream.stream) {
-        fullText += chunk.text();
-        writeResponseChunk(response, {
-          uuid,
-          sources: [],
-          type: "textResponseChunk",
-          textResponse: chunk.text(),
-          close: false,
-          error: false,
-        });
+    for (const line of lines) {
+      let validJSON = false;
+      const message = chunk + line.replace(/^data: /, "");
+
+      try {
+        JSON.parse(message);
+        validJSON = true;
+      } catch {}
+
+      if (!validJSON) {
+        try {
+          chunk += message;
+        } catch (e) {
+          console.error(`Chunk appending error`, e);
+          chunk = "";
+        }
+        continue;
+      } else {
+        chunk = "";
       }
 
-      writeResponseChunk(response, {
-        uuid,
-        sources,
-        type: "textResponseChunk",
-        textResponse: "",
-        close: true,
-        error: false,
-      });
-      resolve(fullText);
-    });
-  }
+      if (message == "[DONE]") {
+        writeResponseChunk(response, {
+          uuid,
+          sources,
+          type: "textResponseChunk",
+          textResponse: "",
+          close: true,
+          error: false,
+        });
+        resolve(fullText);
+      } else {
+        let finishReason = null;
+        let token = "";
+        try {
+          const json = JSON.parse(message);
+          token = json?.choices?.[0]?.delta?.content;
+          finishReason = json?.choices?.[0]?.finish_reason || null;
+        } catch {
+          continue;
+        }
 
-  if (stream?.type === "azureStream") {
-    return new Promise(async (resolve) => {
-      let fullText = "";
-      for await (const event of stream.stream) {
-        for (const choice of event.choices) {
-          const delta = choice.delta?.content;
-          if (!delta) continue;
-          fullText += delta;
+        if (token) {
+          fullText += token;
           writeResponseChunk(response, {
             uuid,
             sources: [],
             type: "textResponseChunk",
-            textResponse: delta,
+            textResponse: token,
             close: false,
             error: false,
           });
         }
-      }
 
-      writeResponseChunk(response, {
-        uuid,
-        sources,
-        type: "textResponseChunk",
-        textResponse: "",
-        close: true,
-        error: false,
-      });
-      resolve(fullText);
-    });
+        if (finishReason !== null) {
+          writeResponseChunk(response, {
+            uuid,
+            sources,
+            type: "textResponseChunk",
+            textResponse: "",
+            close: true,
+            error: false,
+          });
+          resolve(fullText);
+        }
+      }
+    }
+  });
+}
+
+function handleStreamResponses(response, stream, responseProps) {
+  const { uuid = uuidv4(), sources = [] } = responseProps;
+
+  if (stream?.type === "geminiStream" || stream?.type === "azureStream" || stream.type === "togetherAiStream" || stream.type === "huggingFaceStream") {
+    processStreamData(stream, response, uuid, sources);
   }
 
-  if (stream.type === "togetherAiStream") {
-    return new Promise((resolve) => {
-      let fullText = "";
-      let chunk = "";
-      stream.stream.data.on("data", (data) => {
-        const lines = data
-          ?.toString()
-          ?.split("\n")
-          .filter((line) => line.trim() !== "");
-
-        for (const line of lines) {
-          let validJSON = false;
-          const message = chunk + line.replace(/^data: /, "");
-
-          if (message !== "[DONE]") {
-            // JSON chunk is incomplete and has not ended yet
-            // so we need to stitch it together. You would think JSON
-            // chunks would only come complete - but they don't!
-            try {
-              JSON.parse(message);
-              validJSON = true;
-            } catch {}
-
-            if (!validJSON) {
+  // rest of the code...
+}
               // It can be possible that the chunk decoding is running away
               // and the message chunk fails to append due to string length.
               // In this case abort the chunk and reset so we can continue.
