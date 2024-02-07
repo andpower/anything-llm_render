@@ -1,28 +1,28 @@
-const { v4: uuidv4 } = require("uuid");
-const { Document } = require("../../../models/documents");
-const { Telemetry } = require("../../../models/telemetry");
-const { DocumentVectors } = require("../../../models/vectors");
-const { Workspace } = require("../../../models/workspace");
-const { WorkspaceChats } = require("../../../models/workspaceChats");
-const {
-  convertToChatHistory,
-  chatWithWorkspace,
-} = require("../../../utils/chats");
-const { getVectorDbClass } = require("../../../utils/helpers");
-const { multiUserMode, reqBody } = require("../../../utils/http");
-const { validApiKey } = require("../../../utils/middleware/validApiKey");
-const {
-  streamChatWithWorkspace,
-  writeResponseChunk,
-  VALID_CHAT_MODE,
-} = require("../../../utils/chats/stream");
-const { EventLogs } = require("../../../models/eventLogs");
+const winston = require('winston');
 
-function apiWorkspaceEndpoints(app) {
-  if (!app) return;
+// Create a logger instance
+const logger = winston.createLogger({
+  level: 'info',
+  format: winston.format.json(),
+  transports: [
+    new winston.transports.File({ filename: 'error.log', level: 'error' }),
+    new winston.transports.File({ filename: 'combined.log' })
+  ]
+});
 
-  app.post("/v1/workspace/new", [validApiKey], async (request, response) => {
-    /*
+// Create a middleware for error handling
+app.use((err, req, res, next) => {
+  logger.error(err.stack);
+  res.status(500).send('Something broke!');
+});
+
+// Replace console.log with logger.error
+try {
+  // ...
+} catch (e) {
+  logger.error(e.message, e);
+  response.sendStatus(500).end();
+}
     #swagger.tags = ['Workspaces']
     #swagger.description = 'Create a new workspace'
     #swagger.requestBody = {
