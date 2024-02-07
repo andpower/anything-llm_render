@@ -40,13 +40,13 @@ export default defineConfig({
         stream: "stream-browserify",
         zlib: "browserify-zlib",
         util: "util",
-        find: /^~.+/,
+        ```javascript
+        find: /^~.+/, // Matches any string that starts with '~'
         replacement: (val) => {
+          // Removes the leading '~' from the string
           return val.replace(/^~/, "")
         }
-      }
-    ]
-  },
+        ```
   build: {
     rollupOptions: {
       external: [
