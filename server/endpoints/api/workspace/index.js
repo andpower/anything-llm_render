@@ -18,15 +18,15 @@ const {
 } = require("../../../utils/chats/stream");
 const { EventLogs } = require("../../../models/eventLogs");
 
-function apiWorkspaceEndpoints(app) {
-  if (!app) return;
+async function createWorkspace(req, res) {
+  // Code for creating a workspace
+}
 
-  app.post("/v1/workspace/new", [validApiKey], async (request, response) => {
-    /*
-    #swagger.tags = ['Workspaces']
-    #swagger.description = 'Create a new workspace'
-    #swagger.requestBody = {
-      description: 'JSON object containing new display name of workspace.',
+async function listWorkspaces(req, res) {
+  // Code for listing workspaces
+}
+
+// and so on...
       required: true,
       type: 'object',
       content: {
