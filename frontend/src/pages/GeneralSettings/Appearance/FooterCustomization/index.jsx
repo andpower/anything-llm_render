@@ -21,9 +21,23 @@ export default function FooterCustomization() {
     fetchFooterIcons();
   }, []);
 
+  const isValidUrl = (url) => {
+    const pattern = new RegExp('^(https?:\/\/)?'+
+      '((([a-z\d]([a-z\d-]*[a-z\d])*)\.)+[a-z]{2,}|'+
+      '((\d{1,3}\.){3}\d{1,3}))'+
+      '(\:\d+)?(\/[-a-z\d%_.~+]*)*'+
+      '(\?[;&a-z\d%_.~+=-]*)?'+
+      '(\#[-a-z\d_]*)?', 'i');
+    return !!pattern.test(url);
+  }
+  
   const addFooterIcon = () => {
     if (!selectedIcon || !iconUrl) {
       showToast("Please select an icon and enter a URL.", "warning");
+      return;
+    }
+    if (!isValidUrl(iconUrl)) {
+      showToast("Invalid URL. Please enter a valid URL.", "warning");
       return;
     }
     if (footerIcons.length >= 4) {
@@ -35,20 +49,6 @@ export default function FooterCustomization() {
     setSelectedIcon("");
     setIconUrl("");
   };
-
-  const removeFooterIcon = (index) => {
-    const updatedIcons = footerIcons.filter((_, i) => i !== index);
-    setFooterIcons(updatedIcons);
-  };
-
-  const saveFooterChanges = async () => {
-    const { success, error } = await Admin.updateSystemPreferences({
-      footer_data: JSON.stringify(footerIcons),
-    });
-
-    if (!success) {
-      showToast(`Failed to update footer: ${error}`, "error");
-      return;
     }
     localStorage.removeItem("footerData");
 
