@@ -36,19 +36,19 @@ export default function Footer() {
     return (
       <div className="flex justify-center mt-2">
         <div className="flex space-x-4">
-          <a
-            href={paths.github()}
-            className="transition-all duration-300 p-2 rounded-full text-white bg-sidebar-button hover:bg-menu-item-selected-gradient hover:border-slate-100 hover:border-opacity-50 border-transparent border"
-          >
+          const FooterLink = ({ href, children }) => (
+            <a
+              href={href}
+              className="transition-all duration-300 p-2 rounded-full text-white bg-sidebar-button hover:bg-menu-item-selected-gradient hover:border-slate-100 hover:border-opacity-50 border-transparent border"
+            >
+              {children}
+            </a>
+          );
+          
+          // Usage
+          <FooterLink href={paths.github()}>
             <GithubLogo weight="fill" className="h-5 w-5 " />
-          </a>
-          <a
-            href={paths.docs()}
-            className="transition-all duration-300 p-2 rounded-full text-white bg-sidebar-button hover:bg-menu-item-selected-gradient hover:border-slate-100 hover:border-opacity-50 border-transparent border"
-          >
-            <BookOpen weight="fill" className="h-5 w-5 " />
-          </a>
-          <a
+          </FooterLink>
             href={paths.discord()}
             className="transition-all duration-300 p-2 rounded-full text-white bg-sidebar-button hover:bg-menu-item-selected-gradient hover:border-slate-100 hover:border-opacity-50 border-transparent border"
           >
