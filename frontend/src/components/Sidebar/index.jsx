@@ -64,9 +64,9 @@ export default function Sidebar() {
               <ActiveWorkspaces />
             </div>
             <div className="flex flex-col flex-grow justify-end mb-2">
-              <Footer />
-            </div>
-          </div>
+              const Footer = React.memo(function Footer() {
+                // Footer component implementation
+              });
         </div>
       </div>
       {showingNewWsModal && <NewWorkspaceModal hideModal={hideNewWsModal} />}
