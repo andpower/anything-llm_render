@@ -120,17 +120,17 @@ class OllamaAILLM {
     const textResponse = await model
       .pipe(new StringOutputParser())
       .invoke(this.#convertToLangchainPrototypes(messages))
-      .catch((e) => {
+      async function handleError(e, functionName) {
         throw new Error(
-          `Ollama::getChatCompletion failed to communicate with Ollama. ${e.message}`
+          `Ollama::${functionName} failed to communicate with Ollama. ${e.message}`
         );
-      });
-
-    if (!textResponse || !textResponse.length)
-      throw new Error(`Ollama::sendChat text response was empty.`);
-
-    return textResponse;
-  }
+      }
+      
+      // Then use it in your functions like this:
+      const textResponse = await model
+        .pipe(new StringOutputParser())
+        .invoke(this.#convertToLangchainPrototypes(messages))
+        .catch((e) => handleError(e, 'getChatCompletion'));
 
   async streamChat(chatHistory = [], prompt, workspace = {}, rawHistory = []) {
     const messages = await this.compressMessages(
