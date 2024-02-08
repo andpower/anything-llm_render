@@ -291,12 +291,12 @@ function adminEndpoints(app) {
     "/admin/system-preferences",
     [validatedRequest, strictMultiUserRoleValid([ROLES.admin, ROLES.manager])],
     async (_request, response) => {
-      try {
-        const settings = {
-          users_can_delete_workspaces:
-            (await SystemSettings.get({ label: "users_can_delete_workspaces" }))
-              ?.value === "true",
-          limit_user_messages:
+      const settings = await SystemSettings.getAll();
+      const users_can_delete_workspaces = settings.find(setting => setting.label === 'users_can_delete_workspaces')?.value === 'true';
+      const limit_user_messages = settings.find(setting => setting.label === 'limit_user_messages')?.value === 'true';
+      const message_limit = Number(settings.find(setting => setting.label === 'message_limit')?.value) || 10;
+      const footer_data = settings.find(setting => setting.label === 'footer_data')?.value || {};
+      response.status(200).json({ settings: { users_can_delete_workspaces, limit_user_messages, message_limit, footer_data } });
             (await SystemSettings.get({ label: "limit_user_messages" }))
               ?.value === "true",
           message_limit:
