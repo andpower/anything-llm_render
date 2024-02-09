@@ -54,13 +54,13 @@ function chatEndpoints(app) {
           return;
         }
 
-        response.setHeader("Cache-Control", "no-cache");
-        response.setHeader("Content-Type", "text/event-stream");
-        response.setHeader("Access-Control-Allow-Origin", "*");
-        response.setHeader("Connection", "keep-alive");
+        response.set({
+          "Cache-Control": "no-cache",
+          "Content-Type": "text/event-stream",
+          "Access-Control-Allow-Origin": "*",
+          "Connection": "keep-alive"
+        });
         response.flushHeaders();
-
-        if (multiUserMode(response) && user.role !== ROLES.admin) {
           const limitMessagesSetting = await SystemSettings.get({
             label: "limit_user_messages",
           });
