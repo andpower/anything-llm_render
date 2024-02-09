@@ -1,49 +1,49 @@
-import React, { useEffect, useState } from "react";
-import Sidebar from "@/components/SettingsSidebar";
-import { isMobile } from "react-device-detect";
-import { DATA_CONNECTORS } from "@/components/DataConnectorOption";
-import System from "@/models/system";
-import showToast from "@/utils/toast";
-import pluralize from "pluralize";
-import { TagsInput } from "react-tag-input-component";
-import { Info } from "@phosphor-icons/react";
+import React, { useEffect, useState, useCallback } from "react";
 
-const DEFAULT_BRANCHES = ["main", "master"];
-export default function GithubConnectorSetup() {
-  const { image } = DATA_CONNECTORS.github;
-  const [loading, setLoading] = useState(false);
-  const [repo, setRepo] = useState(null);
-  const [accessToken, setAccessToken] = useState(null);
-  const [ignores, setIgnores] = useState([]);
+//...
 
-  const [settings, setSettings] = useState({
-    repo: null,
-    accessToken: null,
-  });
+const handleSubmit = useCallback(async (e) => {
+  e.preventDefault();
+  const form = new FormData(e.target);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const form = new FormData(e.target);
+  try {
+    setLoading(true);
+    showToast(
+      "Fetching all files for repo - this may take a while.",
+      "info",
+      { clear: true, autoClose: false }
+    );
+    const { data, error } = await System.dataConnectors.github.collect({
+      repo: form.get("repo"),
+      accessToken: form.get("accessToken"),
+      branch: form.get("branch"),
+      ignorePaths: ignores,
+    });
 
-    try {
-      setLoading(true);
-      showToast(
-        "Fetching all files for repo - this may take a while.",
-        "info",
-        { clear: true, autoClose: false }
-      );
-      const { data, error } = await System.dataConnectors.github.collect({
-        repo: form.get("repo"),
-        accessToken: form.get("accessToken"),
-        branch: form.get("branch"),
-        ignorePaths: ignores,
-      });
+    if (!!error) {
+      showToast(error, "error", { clear: true });
+      setLoading(false);
+      return;
+    }
 
-      if (!!error) {
-        showToast(error, "error", { clear: true });
-        setLoading(false);
-        return;
-      }
+    showToast(
+      `${data.files} ${pluralize("file", data.files)} collected from ${
+        data.author
+      }/${data.repo}:${data.branch}. Output folder is ${data.destination}.`,
+      "success",
+      { clear: true }
+    );
+    e.target.reset();
+    setLoading(false);
+    return;
+  } catch (e) {
+    console.error(e);
+    showToast(e.message, "error", { clear: true });
+    setLoading(false);
+  }
+}, [ignores]);
+
+//...
 
       showToast(
         `${data.files} ${pluralize("file", data.files)} collected from ${
