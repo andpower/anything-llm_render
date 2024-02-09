@@ -34,11 +34,11 @@ export default function SettingsSidebar() {
   const [showBgOverlay, setShowBgOverlay] = useState(false);
 
   useEffect(() => {
-    function handleBg() {
-      if (showSidebar) {
-        setTimeout(() => {
-          setShowBgOverlay(true);
-        }, 300);
+    const handleBg = () => {
+      showSidebar ? setTimeout(() => setShowBgOverlay(true), 300) : setShowBgOverlay(false);
+    }
+    handleBg();
+  }, [showSidebar]);
       } else {
         setShowBgOverlay(false);
       }
