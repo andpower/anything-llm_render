@@ -45,12 +45,12 @@ export default function GithubConnectorSetup() {
         return;
       }
 
+      const { files, author, repo, branch, destination } = data;
       showToast(
-        `${data.files} ${pluralize("file", data.files)} collected from ${
-          data.author
-        }/${data.repo}:${data.branch}. Output folder is ${data.destination}.`,
+        `${files} ${pluralize("file", files)} collected from ${author}/${repo}:${branch}. Output folder is ${destination}.`,
         "success",
         { clear: true }
+      );
       );
       e.target.reset();
       setLoading(false);
