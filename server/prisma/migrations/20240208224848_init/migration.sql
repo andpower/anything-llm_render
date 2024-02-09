@@ -1,6 +1,6 @@
 -- AlterTable
 ALTER TABLE "workspace_chats" ADD COLUMN "thread_id" INTEGER;
-
+CREATE INDEX "workspace_chats_thread_id_idx" ON "workspace_chats"("thread_id");
 -- CreateTable
 CREATE TABLE "workspace_threads" (
     "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
