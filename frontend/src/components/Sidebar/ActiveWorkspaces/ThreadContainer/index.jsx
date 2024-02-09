@@ -1,26 +1,26 @@
-import Workspace from "@/models/workspace";
-import paths from "@/utils/paths";
-import showToast from "@/utils/toast";
-import { Plus, CircleNotch } from "@phosphor-icons/react";
-import { useEffect, useState } from "react";
-import ThreadItem from "./ThreadItem";
+import { createContext, useContext, useState } from 'react';
+
+// Create a context for threads
+const ThreadContext = createContext();
 
 export default function ThreadContainer({ workspace }) {
   const [threads, setThreads] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    async function fetchThreads() {
-      if (!workspace.slug) return;
-      const { threads } = await Workspace.threads.all(workspace.slug);
-      setLoading(false);
-      setThreads(threads);
-    }
-    fetchThreads();
-  }, [workspace.slug]);
+  // Use the context in the parent component
+  return (
+    <ThreadContext.Provider value={{ threads, setThreads }}>
+      {/* Rest of the components */}
+    </ThreadContext.Provider>
+  );
+}
 
-  function removeThread(threadId) {
-    setThreads((prev) => prev.filter((thread) => thread.id !== threadId));
+function NewThreadButton({ workspace }) {
+  // Use the context in a child component
+  const { threads, setThreads } = useContext(ThreadContext);
+
+  // Rest of the code
+}
   }
 
   if (loading) {
