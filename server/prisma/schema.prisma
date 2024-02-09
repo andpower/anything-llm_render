@@ -107,7 +107,7 @@ model workspaces {
 
 model workspace_threads {
   id            Int        @id @default(autoincrement())
-  name          String
+  name          String     @index
   slug          String     @unique
   workspace_id  Int
   user_id       Int?
