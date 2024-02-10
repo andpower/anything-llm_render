@@ -34,23 +34,23 @@ const Actions = ({ message, feedbackScore, chatId }) => {
   );
 };
 
-function ThumbUp({ isSelected, handleFeedback }) {
+function FeedbackButton({ isSelected, handleFeedback, tooltipId, tooltipContent, IconComponent }) {
   return (
     <div className="mt-3 relative">
       <button
         onClick={handleFeedback}
-        data-tooltip-id="thumbs-up"
-        data-tooltip-content="Thumbs up"
+        data-tooltip-id={tooltipId}
+        data-tooltip-content={tooltipContent}
         className="text-zinc-300"
       >
-        <ThumbsUp
+        <IconComponent
           size={18}
           className="mb-1"
           weight={isSelected ? "fill" : "regular"}
         />
       </button>
       <Tooltip
-        id="thumbs-up"
+        id={tooltipId}
         place="bottom"
         delayShow={300}
         className="tooltip !text-xs"
@@ -59,21 +59,21 @@ function ThumbUp({ isSelected, handleFeedback }) {
   );
 }
 
-function ThumbDown({ isSelected, handleFeedback }) {
-  return (
-    <div className="mt-3 relative">
-      <button
-        onClick={handleFeedback}
-        data-tooltip-id="thumbs-down"
-        data-tooltip-content="Thumbs down"
-        className="text-zinc-300"
-      >
-        <ThumbsDown
-          size={18}
-          className="mb-1"
-          weight={isSelected ? "fill" : "regular"}
-        />
-      </button>
+// Usage
+<FeedbackButton
+  isSelected={selectedFeedback > 0}
+  handleFeedback={() => updateFeedback(1)}
+  tooltipId="thumbs-up"
+  tooltipContent="Thumbs up"
+  IconComponent={ThumbsUp}
+/>
+<FeedbackButton
+  isSelected={selectedFeedback < 0}
+  handleFeedback={() => updateFeedback(-1)}
+  tooltipId="thumbs-down"
+  tooltipContent="Thumbs down"
+  IconComponent={ThumbsDown}
+/>
       <Tooltip
         id="thumbs-down"
         place="bottom"
