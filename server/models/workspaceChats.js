@@ -205,7 +205,7 @@ const WorkspaceChats = {
   },
 
   updateFeedbackScore: async function (chatId = null, feedbackScore = null) {
-    if (!chatId) return;
+    if (!chatId || ![1, -1, 0].includes(feedbackScore)) return;
     try {
       await prisma.workspace_chats.update({
         where: {
@@ -219,7 +219,7 @@ const WorkspaceChats = {
     } catch (error) {
       console.error(error.message);
     }
-  },
+  }
 };
 
 module.exports = { WorkspaceChats };
