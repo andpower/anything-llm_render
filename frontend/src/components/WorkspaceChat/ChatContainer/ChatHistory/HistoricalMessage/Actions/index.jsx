@@ -1,5 +1,6 @@
 import React, { memo, useState, useEffect } from "react";
 import useCopyText from "@/hooks/useCopyText";
+import { debounce } from 'lodash';
 import {
   Check,
   ClipboardText,
@@ -19,23 +20,22 @@ const Actions = ({ message, feedbackScore, chatId }) => {
     setSelectedFeedback(newFeedback);
   };
 
+  const debouncedUpdateFeedback = debounce(updateFeedback, 300);
+
   return (
     <div className="flex justify-start items-center gap-x-4">
       <ThumbUp
         isSelected={selectedFeedback > 0}
-        handleFeedback={() => updateFeedback(1)}
+        handleFeedback={() => debouncedUpdateFeedback(1)}
       />
       <ThumbDown
         isSelected={selectedFeedback < 0}
-        handleFeedback={() => updateFeedback(-1)}
+        handleFeedback={() => debouncedUpdateFeedback(-1)}
       />
       <CopyMessage message={message} />
     </div>
   );
 };
-
-function ThumbUp({ isSelected, handleFeedback }) {
-  return (
     <div className="mt-3 relative">
       <button
         onClick={handleFeedback}
