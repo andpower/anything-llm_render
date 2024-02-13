@@ -6,6 +6,7 @@ export default function SlashCommandsButton({ showing, setShowSlashCommand }) {
   return (
     <div
       id="slash-cmd-btn"
+      title="View all available slash commands for chatting."
       data-tooltip-id="tooltip-slash-cmd-btn"
       data-tooltip-content="View all available slash commands for chatting."
       onClick={() => setShowSlashCommand(!showing)}
@@ -13,7 +14,6 @@ export default function SlashCommandsButton({ showing, setShowSlashCommand }) {
         showing ? "!opacity-100" : ""
       }`}
     >
-      <img
         src={SlashCommandIcon}
         className="w-6 h-6 pointer-events-none"
         alt="Slash commands button"
