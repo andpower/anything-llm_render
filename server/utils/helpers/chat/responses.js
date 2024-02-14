@@ -1,28 +1,28 @@
 const { v4: uuidv4 } = require("uuid");
 const moment = require("moment");
 
+```JavaScript
 // The default way to handle a stream response. Functions best with OpenAI.
 // Currently used for LMStudio, LocalAI, Mistral API, and OpenAI
 function handleDefaultStreamResponse(response, stream, responseProps) {
-  const { uuid = uuidv4(), sources = [] } = responseProps;
+  ...
+}
 
-  return new Promise((resolve) => {
-    let fullText = "";
-    let chunk = "";
-    stream.data.on("data", (data) => {
-      const lines = data
-        ?.toString()
-        ?.split("\n")
-        .filter((line) => line.trim() !== "");
+// Converts the chat history into a specific format
+function convertToChatHistory(history = []) {
+  ...
+}
 
-      for (const line of lines) {
-        let validJSON = false;
-        const message = chunk + line.replace(/^data: /, "");
+// Converts the prompt history into a specific format
+function convertToPromptHistory(history = []) {
+  ...
+}
 
-        // JSON chunk is incomplete and has not ended yet
-        // so we need to stitch it together. You would think JSON
-        // chunks would only come complete - but they don't!
-        try {
+// Writes a response chunk
+function writeResponseChunk(response, data) {
+  ...
+}
+```
           JSON.parse(message);
           validJSON = true;
         } catch {}
