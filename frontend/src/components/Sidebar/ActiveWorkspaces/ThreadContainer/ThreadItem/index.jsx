@@ -75,12 +75,12 @@ export default function ThreadItem({
           <div ref={optionsContainer}>
             <div className="flex items-center w-fit group-hover:visible md:invisible gap-x-1">
               <button
-                type="button"
-                onClick={() => setShowOptions(!showOptions)}
-              >
-                <DotsThree className="text-slate-300" size={25} />
-              </button>
-            </div>
+                const handleShowOptions = () => setShowOptions(prevShowOptions => !prevShowOptions);
+                ...
+                <button
+                  type="button"
+                  onClick={handleShowOptions}
+                >
             {showOptions && (
               <OptionsMenu
                 containerRef={optionsContainer}
