@@ -50,17 +50,18 @@ const Workspace = {
 
   update: async function (id = null, data = {}) {
     if (!id) throw new Error("No workspace id provided for update");
-
+  
     const validKeys = Object.keys(data).filter((key) =>
       this.writable.includes(key)
     );
     if (validKeys.length === 0)
       return { workspace: { id }, message: "No valid fields to update!" };
-
+  
     try {
+      const validatedData = validateData(data);
       const workspace = await prisma.workspaces.update({
         where: { id },
-        data, // TODO: strict validation on writables here.
+        data: validatedData,
       });
       return { workspace, message: null };
     } catch (error) {
@@ -68,7 +69,6 @@ const Workspace = {
       return { workspace: null, message: error.message };
     }
   },
-
   getWithUser: async function (user = null, clause = {}) {
     if ([ROLES.admin, ROLES.manager].includes(user.role))
       return this.get(clause);
