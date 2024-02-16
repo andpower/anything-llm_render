@@ -1,53 +1,53 @@
-import { useState, useEffect } from "react";
-import ChatHistory from "./ChatHistory";
-import PromptInput from "./PromptInput";
-import Workspace from "@/models/workspace";
-import handleChat from "@/utils/chat";
-import { isMobile } from "react-device-detect";
-import { SidebarMobileHeader } from "../../Sidebar";
-import { useParams } from "react-router-dom";
+import sanitizeHtml from 'sanitize-html';
 
-export default function ChatContainer({ workspace, knownHistory = [] }) {
-  const { threadSlug = null } = useParams();
-  const [message, setMessage] = useState("");
-  const [loadingResponse, setLoadingResponse] = useState(false);
-  const [chatHistory, setChatHistory] = useState(knownHistory);
-  const handleMessageChange = (event) => {
-    setMessage(event.target.value);
-  };
+//...
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    if (!message || message === "") return false;
+const handleSubmit = async (event) => {
+  event.preventDefault();
+  if (!message || message === "") return false;
 
-    const prevChatHistory = [
-      ...chatHistory,
-      { content: message, role: "user" },
-      {
-        content: "",
-        role: "assistant",
-        pending: true,
-        userMessage: message,
-        animate: true,
-      },
-    ];
+  const sanitizedMessage = sanitizeHtml(message);
+  const prevChatHistory = [
+    ...chatHistory,
+    { content: sanitizedMessage, role: "user" },
+    {
+      content: "",
+      role: "assistant",
+      pending: true,
+      userMessage: sanitizedMessage,
+      animate: true,
+    },
+  ];
 
-    setChatHistory(prevChatHistory);
-    setMessage("");
-    setLoadingResponse(true);
-  };
+  setChatHistory(prevChatHistory);
+  setMessage("");
+  setLoadingResponse(true);
+};
 
-  const sendCommand = async (command, submit = false) => {
-    if (!command || command === "") return false;
-    if (!submit) {
-      setMessage(command);
-      return;
-    }
+const sendCommand = async (command, submit = false) => {
+  if (!command || command === "") return false;
+  if (!submit) {
+    setMessage(command);
+    return;
+  }
 
-    const prevChatHistory = [
-      ...chatHistory,
-      { content: command, role: "user" },
-      {
+  const sanitizedCommand = sanitizeHtml(command);
+  const prevChatHistory = [
+    ...chatHistory,
+    { content: sanitizedCommand, role: "user" },
+    {
+      content: "",
+      role: "assistant",
+      pending: true,
+      userMessage: sanitizedCommand,
+      animate: true,
+    },
+  ];
+
+  setChatHistory(prevChatHistory);
+  setMessage("");
+  setLoadingResponse(true);
+};
         content: "",
         role: "assistant",
         pending: true,
