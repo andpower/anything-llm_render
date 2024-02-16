@@ -50,20 +50,20 @@ export default function WorkspaceChats() {
   const menuRef = useRef();
   const openMenuButton = useRef();
 
+  import { saveAs } from 'file-saver';
+  ...
   const handleDumpChats = async () => {
     const chats = await System.exportChats(exportType);
     if (!!chats) {
       const { name, mimeType, fileExtension, filenameFunc } =
         exportOptions[exportType];
       const blob = new Blob([chats], { type: mimeType });
-      const link = document.createElement("a");
-
-      link.href = window.URL.createObjectURL(blob);
-      link.download = `${filenameFunc()}.${fileExtension}`;
-      document.body.appendChild(link);
-      link.click();
-      window.URL.revokeObjectURL(link.href);
-      document.body.removeChild(link);
+      saveAs(blob, `${filenameFunc()}.${fileExtension}`);
+      showToast(`Chats exported successfully as ${name}.`, "success");
+    } else {
+      showToast("Failed to export chats.", "error");
+    }
+  };
 
       showToast(`Chats exported successfully as ${name}.`, "success");
     } else {
