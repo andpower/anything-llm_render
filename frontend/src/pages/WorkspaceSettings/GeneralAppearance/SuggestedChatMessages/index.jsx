@@ -71,22 +71,22 @@ export default function SuggestedChatMessages({ slug }) {
     setEditingIndex(-1);
   };
 
-  const onEditChange = (e) => {
-    const updatedNewMessage = {
-      ...newMessage,
-      [e.target.name]: e.target.value,
+  const onEditChange = ({ target: { name, value } }) => {
+      const updatedNewMessage = {
+        ...newMessage,
+        [name]: value,
+      };
+      setNewMessage(updatedNewMessage);
+      const updatedMessages = suggestedMessages.map((message, index) => {
+        if (index === editingIndex) {
+          return { ...message, [name]: value };
+        }
+        return message;
+      });
+  
+      setSuggestedMessages(updatedMessages);
+      setHasChanges(true);
     };
-    setNewMessage(updatedNewMessage);
-    const updatedMessages = suggestedMessages.map((message, index) => {
-      if (index === editingIndex) {
-        return { ...message, [e.target.name]: e.target.value };
-      }
-      return message;
-    });
-
-    setSuggestedMessages(updatedMessages);
-    setHasChanges(true);
-  };
 
   if (loading)
     return (
