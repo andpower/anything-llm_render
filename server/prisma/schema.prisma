@@ -86,16 +86,16 @@ model welcome_messages {
 }
 
 model workspaces {
-  id                           Int                            @id @default(autoincrement())
-  name                         String
-  slug                         String                         @unique
-  vectorTag                    String?
-  createdAt                    DateTime                       @default(now())
-  openAiTemp                   Float?
-  openAiHistory                Int                            @default(20)
-  lastUpdatedAt                DateTime                       @default(now())
-  openAiPrompt                 String?
-  similarityThreshold          Float?                         @default(0.25)
+  enum ChatMode {
+    CHAT
+    // Add other modes here
+  }
+  
+  model workspaces {
+    // other fields...
+    chatMode ChatMode @default(CHAT)
+    // other fields...
+  }
   chatModel                    String?
   topN                         Int?                           @default(4)
   chatMode                     String?                        @default("chat")
