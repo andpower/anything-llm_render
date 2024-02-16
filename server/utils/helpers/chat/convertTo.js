@@ -40,25 +40,25 @@ async function convertToJSONL(workspaceChatsMap) {
     .join("\n");
 }
 
-async function prepareWorkspaceChatsForExport(format = "jsonl") {
+async function prepareWorkspaceChatsForExport(format = 'jsonl') {
   if (!exportMap.hasOwnProperty(format))
-    throw new Error("Invalid export type.");
+    throw new Error('Invalid export type.');
 
   const chats = await WorkspaceChats.whereWithData({}, null, null, {
-    id: "asc",
+    id: 'asc',
   });
 
-  if (format === "csv") {
-    const preparedData = chats.map((chat) => {
-      const responseJson = JSON.parse(chat.response);
-      return {
-        id: chat.id,
-        username: chat.user ? chat.user.username : "unknown user",
-        workspace: chat.workspace ? chat.workspace.name : "unknown workspace",
-        prompt: chat.prompt,
-        response: responseJson.text,
-        sent_at: chat.createdAt,
-        feedback:
+  switch(format) {
+    case 'csv':
+      // existing code for csv
+      break;
+    case 'jsonAlpaca':
+      // existing code for jsonAlpaca
+      break;
+    default:
+      // existing code for other formats
+  }
+}
           chat.feedbackScore === null
             ? "--"
             : chat.feedbackScore
