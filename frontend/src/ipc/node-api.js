@@ -30,5 +30,5 @@ ipcRenderer.on("backend-server-online", async (_evt, message) => {
 
 export function refocusApplication() {
   ipcRenderer.send("focus-fix");
-  return;
+}
 }
