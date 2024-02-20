@@ -114,35 +114,35 @@ const PinItemToWorkspace = memo(({ workspace, docPath, item }) => {
 
   const updatePinStatus = async () => {
     try {
-      window.dispatchEvent(pinEvent);
-      const success = await Workspace.setPinForDocument(
-        workspace.slug,
-        docPath,
-        !pinned
-      );
-
-      if (!success) {
-        showToast(`Failed to ${!pinned ? "pin" : "unpin"} document.`, "error", {
-          clear: true,
-        });
-        return;
+      if (window.confirm(`Are you sure you want to ${!pinned ? 'pin' : 'unpin'} this document?`)) {
+        window.dispatchEvent(pinEvent);
+        const success = await Workspace.setPinForDocument(
+          workspace.slug,
+          docPath,
+          !pinned
+        );
+  
+        if (!success) {
+          showToast(`Failed to ${!pinned ? 'pin' : 'unpin'} document.`, 'error', {
+            clear: true,
+          });
+          return;
+        }
+  
+        showToast(
+          `Document ${!pinned ? 'pinned to' : 'unpinned from'} workspace`,
+          'success',
+          { clear: true }
+        );
+        setPinned(!pinned);
       }
-
-      showToast(
-        `Document ${!pinned ? "pinned to" : "unpinned from"} workspace`,
-        "success",
-        { clear: true }
-      );
-      setPinned(!pinned);
     } catch (error) {
-      showToast(`Failed to pin document. ${error.message}`, "error", {
+      showToast(`Failed to pin document. ${error.message}`, 'error', {
         clear: true,
       });
       return;
     }
   };
-
-  if (!item) return <div />;
 
   const PinIcon = pinned ? PushPinSlash : PushPin;
   return (
