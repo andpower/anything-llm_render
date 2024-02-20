@@ -1,36 +1,36 @@
 import UploadFile from "../UploadFile";
 import PreLoader from "@/components/Preloader";
-import { memo, useEffect, useState } from "react";
-import FolderRow from "./FolderRow";
-import pluralize from "pluralize";
+import { memo, useEffect, useState, useCallback } from "react";
 
-function Directory({
-  files,
-  loading,
-  setLoading,
-  fileTypes,
-  workspace,
-  fetchKeys,
-  selectedItems,
-  setSelectedItems,
-  setHighlightWorkspace,
-  moveToWorkspace,
-  setLoadingMessage,
-  loadingMessage,
-}) {
-  const [amountSelected, setAmountSelected] = useState(0);
+const toggleSelection = useCallback((item) => {
+  setSelectedItems((prevSelectedItems) => {
+    const newSelectedItems = { ...prevSelectedItems };
 
-  const toggleSelection = (item) => {
-    setSelectedItems((prevSelectedItems) => {
-      const newSelectedItems = { ...prevSelectedItems };
+    if (item.type === "folder") {
+      const isCurrentlySelected = isFolderCompletelySelected(item);
+      if (isCurrentlySelected) {
+        item.items.forEach((file) => delete newSelectedItems[file.id]);
+      } else {
+        item.items.forEach((file) => (newSelectedItems[file.id] = true));
+      }
+    } else {
+      if (newSelectedItems[item.id]) {
+        delete newSelectedItems[item.id];
+      } else {
+        newSelectedItems[item.id] = true;
+      }
+    }
 
-      if (item.type === "folder") {
-        const isCurrentlySelected = isFolderCompletelySelected(item);
-        if (isCurrentlySelected) {
-          item.items.forEach((file) => delete newSelectedItems[file.id]);
-        } else {
-          item.items.forEach((file) => (newSelectedItems[file.id] = true));
-        }
+    return newSelectedItems;
+  });
+}, [setSelectedItems, isFolderCompletelySelected]);
+
+const isFolderCompletelySelected = useCallback((folder) => {
+  if (folder.items.length === 0) {
+    return false;
+  }
+  return folder.items.every((file) => selectedItems[file.id]);
+}, [selectedItems]);
       } else {
         if (newSelectedItems[item.id]) {
           delete newSelectedItems[item.id];
