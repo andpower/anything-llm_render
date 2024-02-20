@@ -28,7 +28,9 @@ ipcRenderer.on("backend-server-online", async (_evt, message) => {
   API_BASE();
 });
 
+const FOCUS_FIX = "focus-fix";
+
 export function refocusApplication() {
-  ipcRenderer.send("focus-fix");
+  ipcRenderer.send(FOCUS_FIX);
   return;
 }
