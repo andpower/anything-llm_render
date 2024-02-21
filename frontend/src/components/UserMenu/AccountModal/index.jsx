@@ -40,19 +40,19 @@ export default function AccountModal({ user, hideModal }) {
 
     const data = {};
     const form = new FormData(e.target);
-    for (var [key, value] of form.entries()) {
-      if (!value || value === null) continue;
-      data[key] = value;
-    }
-
-    const { success, error } = await System.updateUser(data);
-    if (success) {
-      let storedUser = JSON.parse(localStorage.getItem(AUTH_USER));
-
-      if (storedUser) {
-        storedUser.username = data.username;
-        localStorage.setItem(AUTH_USER, JSON.stringify(storedUser));
-      }
+    ```JavaScript
+        // Example of a simple sanitization function
+        function sanitizeInput(input) {
+          return input.replace(/<[^>]*>?/gm, '');
+        }
+    
+        // Usage
+        const sanitizedUsername = sanitizeInput(data.username);
+        const sanitizedPassword = sanitizeInput(data.password);
+    
+        data.username = sanitizedUsername;
+        data.password = sanitizedPassword;
+    ```
       window.location.reload();
     } else {
       showToast(`Failed to update user: ${error}`, "error");
