@@ -85,24 +85,24 @@ export default function UserButton() {
               Support
             </a>
             <button
-              onClick={() => {
+              function clearAuthData() {
                 window.localStorage.removeItem(AUTH_USER);
                 window.localStorage.removeItem(AUTH_TOKEN);
                 window.localStorage.removeItem(AUTH_TIMESTAMP);
-                window.location.replace(paths.home());
-              }}
-              type="button"
-              className="text-white hover:bg-slate-200/20 w-full text-left px-4 py-1.5 rounded-md"
-            >
-              Sign out
-            </button>
-          </div>
-        </div>
-      )}
-      {user && showAccountSettings && (
-        <AccountModal
-          user={user}
-          hideModal={() => setShowAccountSettings(false)}
+              }
+              
+              // ... rest of the code
+              
+              <button
+                onClick={() => {
+                  clearAuthData();
+                  window.location.replace(paths.home());
+                }}
+                type="button"
+                className="text-white hover:bg-slate-200/20 w-full text-left px-4 py-1.5 rounded-md"
+              >
+                Sign out
+              </button>
         />
       )}
     </div>
