@@ -10,35 +10,39 @@
 // Update the date below if you run this again because Perplexity added new models.
 // Last Collected: Feb 22, 2024
 
-import fs from "fs";
+import fs from 'fs/promises';
 
-function parseChatModels() {
-  const models = {};
-  const tableString = fs.readFileSync("chat_models.txt", { encoding: "utf-8" });
-  const rows = tableString.split("\n").slice(2);
+async function parseChatModels() {
+  try {
+    const models = {};
+    const tableString = await fs.readFile("chat_models.txt", { encoding: "utf-8" });
+    const rows = tableString.split("\n").slice(2);
 
-  rows.forEach((row) => {
-    let [model, contextLength] = row
-      .split("|")
-      .slice(1, -1)
-      .map((text) => text.trim());
-    model = model.replace(/`|\s*\[\d+\]\s*/g, "");
-    const maxLength = Number(contextLength.replace(/\s*\[\d+\]\s*/g, ""));
-    if (model && maxLength) {
-      models[model] = {
-        id: model,
-        name: model,
-        maxLength: maxLength,
-      };
-    }
-  });
+    rows.forEach((row) => {
+      let [model, contextLength] = row
+        .split("|")
+        .slice(1, -1)
+        .map((text) => text.trim());
+      model = model.replace(/`|\s*\[\d+\]\s*/g, "");
+      const maxLength = Number(contextLength.replace(/\s*\[\d+\]\s*/g, ""));
+      if (model && maxLength) {
+        models[model] = {
+          id: model,
+          name: model,
+          maxLength: maxLength,
+        };
+      }
+    });
 
-  fs.writeFileSync(
-    "chat_models.json",
-    JSON.stringify(models, null, 2),
-    "utf-8"
-  );
-  return models;
+    await fs.writeFile(
+      "chat_models.json",
+      JSON.stringify(models, null, 2),
+      "utf-8"
+    );
+    return models;
+  } catch (error) {
+    console.error(`Error occurred while parsing chat models: ${error}`);
+  }
 }
 
 parseChatModels();
