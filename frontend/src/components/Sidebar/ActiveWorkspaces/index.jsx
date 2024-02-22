@@ -13,26 +13,26 @@ import useUser from "@/hooks/useUser";
 import ThreadContainer from "./ThreadContainer";
 import { Link } from "react-router-dom";
 
-export default function ActiveWorkspaces() {
-  const { slug } = useParams();
-  const [loading, setLoading] = useState(true);
-  const [workspaces, setWorkspaces] = useState([]);
-  const [selectedWs, setSelectedWs] = useState(null);
-  const [hoverStates, setHoverStates] = useState({});
-  const [gearHover, setGearHover] = useState({});
-  const [uploadHover, setUploadHover] = useState({});
-  const { showing, showModal, hideModal } = useManageWorkspaceModal();
-  const { user } = useUser();
+const WorkspaceItem = React.memo(({ workspace }) => {
+  const isActive = workspace.slug === slug;
+  const isHovered = hoverStates[workspace.id];
+  return (
+    <div
+      className="flex flex-col w-full"
+      onMouseEnter={() => handleMouseEnter(workspace.id)}
+      onMouseLeave={() => handleMouseLeave(workspace.id)}
+      key={workspace.id}
+    >
+      ...
+    </div>
+  );
+});
 
-  useEffect(() => {
-    async function getWorkspaces() {
-      const workspaces = await Workspace.all();
-      setLoading(false);
-      setWorkspaces(workspaces);
-    }
-    getWorkspaces();
-  }, []);
-  const handleMouseEnter = useCallback((workspaceId) => {
+...
+
+{workspaces.map((workspace) => (
+  <WorkspaceItem key={workspace.id} workspace={workspace} />
+))}
     setHoverStates((prev) => ({ ...prev, [workspaceId]: true }));
   }, []);
 
