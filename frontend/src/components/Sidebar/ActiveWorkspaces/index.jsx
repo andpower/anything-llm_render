@@ -73,8 +73,8 @@ export default function ActiveWorkspaces() {
   return (
     <>
       {workspaces.map((workspace) => {
-        const isActive = workspace.slug === slug;
-        const isHovered = hoverStates[workspace.id];
+        const showWorkspaceOptions = (isActive || isHovered || gearHover[workspace.id]) && user?.role !== "default";
+        
         return (
           <div
             className="flex flex-col w-full"
@@ -86,19 +86,19 @@ export default function ActiveWorkspaces() {
               key={workspace.id}
               className="flex gap-x-2 items-center justify-between"
             >
-              <a
-                href={isActive ? null : paths.workspace.chat(workspace.slug)}
-                className={`
-              transition-all duration-[200ms]
-                flex flex-grow w-[75%] gap-x-2 py-[6px] px-[12px] rounded-lg text-slate-200 justify-start items-center 
-                hover:bg-workspace-item-selected-gradient 
-                ${
-                  isActive
-                    ? "border-2 bg-workspace-item-selected-gradient border-white"
-                    : "border bg-workspace-item-gradient bg-opacity-60 border-transparent hover:border-slate-100 hover:border-opacity-50"
-                }`}
-              >
-                <div className="flex flex-row justify-between w-full">
+              ...
+              {showWorkspaceOptions ? (
+                <div className="flex items-center gap-x-2">
+                  ...
+                </div>
+              ) : null}
+              ...
+            </div>
+            {isActive && (
+              <ThreadContainer workspace={workspace} isActive={isActive} />
+            )}
+          </div>
+        );
                   <div className="flex items-center space-x-2">
                     <SquaresFour
                       weight={isActive ? "fill" : "regular"}
