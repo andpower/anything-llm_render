@@ -250,17 +250,17 @@ export default function GeneralLLMPreference() {
                     </div>
                   </div>
                   <div className="px-4 pt-[70px] flex flex-col gap-y-1 max-h-[390px] overflow-y-auto no-scroll pb-4">
-                    {filteredLLMs.map((llm) => {
-                      if (llm.value === "native" && isHosted) return null;
+                    {filteredLLMs.map(({name, value, logo, description}) => {
+                      if (value === "native" && isHosted) return null;
                       return (
                         <LLMItem
-                          key={llm.name}
-                          name={llm.name}
-                          value={llm.value}
-                          image={llm.logo}
-                          description={llm.description}
-                          checked={selectedLLM === llm.value}
-                          onClick={() => updateLLMChoice(llm.value)}
+                          key={name}
+                          name={name}
+                          value={value}
+                          image={logo}
+                          description={description}
+                          checked={selectedLLM === value}
+                          onClick={() => updateLLMChoice(value)}
                         />
                       );
                     })}
