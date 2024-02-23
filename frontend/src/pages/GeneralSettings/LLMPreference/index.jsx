@@ -63,10 +63,10 @@ export default function GeneralLLMPreference() {
     setHasChanges(!!error);
   };
 
-  const updateLLMChoice = (selection) => {
+  const updateLLMChoice = useCallback((selection) => {
     setSelectedLLM(selection);
     setHasChanges(true);
-  };
+  }, []);
 
   useEffect(() => {
     async function fetchKeys() {
