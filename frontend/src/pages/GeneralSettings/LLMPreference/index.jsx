@@ -1,12 +1,12 @@
-import React, { useEffect, useState } from "react";
-import Sidebar from "@/components/SettingsSidebar";
-import { isMobile } from "react-device-detect";
-import System from "@/models/system";
-import showToast from "@/utils/toast";
-import AnythingLLMIcon from "@/media/logo/anything-llm-icon.png";
-import OpenAiLogo from "@/media/llmprovider/openai.png";
-import AzureOpenAiLogo from "@/media/llmprovider/azure.png";
-import AnthropicLogo from "@/media/llmprovider/anthropic.png";
+import React, { useEffect, useState, useMemo } from "react";
+
+...
+
+const filteredLLMs = useMemo(() => {
+  return LLMS.filter((llm) =>
+    llm.name.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+}, [searchQuery, selectedLLM]);
 import GeminiLogo from "@/media/llmprovider/gemini.png";
 import OllamaLogo from "@/media/llmprovider/ollama.png";
 import LMStudioLogo from "@/media/llmprovider/lmstudio.png";
