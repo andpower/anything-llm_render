@@ -14,31 +14,31 @@ import fs from "fs";
 
 function parseChatModels() {
   const models = {};
-  const tableString = fs.readFileSync("chat_models.txt", { encoding: "utf-8" });
-  const rows = tableString.split("\n").slice(2);
-
-  rows.forEach((row) => {
-    let [model, _, contextLength] = row
-      .split("|")
-      .slice(1, -1)
-      .map((text) => text.trim());
-    model = model.replace(/`|\s*\[\d+\]\s*/g, "");
-    const maxLength = Number(contextLength.replace(/\s*\[\d+\]\s*/g, ""));
-    if (model && maxLength) {
-      models[model] = {
-        id: model,
-        name: model,
-        maxLength: maxLength,
-      };
-    }
+  fs.readFile("chat_models.txt", { encoding: "utf-8" }, (err, data) => {
+    if (err) throw err;
+    const tableString = data;
+    const rows = tableString.split("\n").slice(2);
+  
+    rows.forEach((row) => {
+      let [model, _, contextLength] = row
+        .split("|")
+        .slice(1, -1)
+        .map((text) => text.trim());
+      model = model.replace(/`|\s*\[\d+\]\s*/g, "");
+      const maxLength = Number(contextLength.replace(/\s*\[\d+\]\s*/g, ""));
+      if (model && maxLength) {
+        models[model] = {
+          id: model,
+          name: model,
+          maxLength: maxLength,
+        };
+      }
+    });
+  
+    fs.writeFileSync(
+      "chat_models.json",
+      JSON.stringify(models, null, 2),
+      "utf-8"
+    );
+    return models;
   });
-
-  fs.writeFileSync(
-    "chat_models.json",
-    JSON.stringify(models, null, 2),
-    "utf-8"
-  );
-  return models;
-}
-
-parseChatModels();
