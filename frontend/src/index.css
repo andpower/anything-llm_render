@@ -444,14 +444,13 @@ dialog::backdrop {
   @apply text-[14px] font-bold text-white;
 }
 
-
 /**
  * ==============================================
  * Markdown Styles
  * ==============================================
  */
 
- .markdown h1 {
+.markdown h1 {
   font-size: xx-large;
   line-height: 1.7;
   padding-left: 0.3rem;
@@ -523,11 +522,8 @@ dialog::backdrop {
 
 /* List Styles */
 ol {
-  list-style: decimal-leading-zero;
-  /* color: #dcdcdccf; */
-  padding-left: 0px;
-  padding-top: 10px;
-  margin: 10px;
+  list-style: revert-layer;
+  margin-left: 10px;
 }
 
 ol li {
@@ -539,22 +535,22 @@ ol li {
 }
 
 ol li::marker {
-  color: #d2d2d2cf;
+  color: #fff;
   padding-top: 10px;
-  font-weight: lighter;
+  font-weight: 400;
 }
 
 ol li p {
   margin: 0.5rem;
   padding-top: 10px;
-  color: #d9d9d9cf;
+  color: #fff;
+  font-weight: 400;
 }
 
 ul {
   list-style: revert-layer;
-  /* color: #cfcfcfcf; */
   padding-left: 0px;
-  padding-top: 10px;
+  padding-top: 0px;
   padding-bottom: 10px;
   margin: 10px;
 }
@@ -562,12 +558,11 @@ ul {
 ul li::marker {
   color: #d0d0d0cf;
   padding-top: 10px;
-  font-weight: lighter;
+  font-weight: bold;
 }
 
 ul li {
   margin-left: 20px;
-
   padding-left: 10px;
   transition: all 0.3s ease;
   line-height: 1.4rem;
@@ -579,6 +574,7 @@ ul li > ul {
 
 .markdown p {
   margin: 0.35rem;
+  font-weight: 400;
 }
 
 .markdown {
@@ -589,7 +585,6 @@ pre {
 }
 
 strong {
-  font-weight: 600;
+  font-weight: bold;
   color: #fff;
 }
- 
