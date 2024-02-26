@@ -1,3 +1,5 @@
+import { useCallback } from 'react';
+
 export default function EmbedderItem({
   name,
   value,
@@ -6,17 +8,15 @@ export default function EmbedderItem({
   checked,
   onClick,
 }) {
+  const handleClick = useCallback(() => onClick(value), [onClick, value]);
+
   return (
     <div
-      onClick={() => onClick(value)}
+      onClick={handleClick}
       className={`w-full hover:bg-white/10 p-2 rounded-md hover:cursor-pointer ${
         checked && "bg-white/10"
       }`}
     >
-      <input
-        type="checkbox"
-        value={value}
-        className="peer hidden"
         checked={checked}
         readOnly={true}
         formNoValidate={true}
