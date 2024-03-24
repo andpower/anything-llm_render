@@ -4,23 +4,27 @@
 # Standard tier will give the best performance, anything lower do not
 # expect fast chats, embeddings, or other functionality.
 
+# Exported from Render on 2024-03-24T00:18:18Z
 services:
-  - type: web
-    name: anythingllm
-    runtime: image
-    image: 
-      url: docker.io/mintplexlabs/anythingllm:render
-    region: oregon # optional (defaults to oregon)
-    plan: standard # optional (defaults to starter instance type)
-    numInstances: 1 # optional (defaults to 1)
-    healthCheckPath: /api/ping
-    autoDeploy: false
-    envVars:
-      - key: PORT
-        value: 3001
-      - key: STORAGE_DIR
-        value: '/storage'
-    disk:
-      name: AnythingLLM Storage
-      mountPath: /storage
-      sizeGB: 10
+- type: web
+  name: ANA-INEC
+  runtime: image
+  image:
+    url: docker.io/mintplexlabs/anythingllm:render
+  plan: standard
+  envVars:
+  - key: STORAGE_DIR
+    sync: false
+  - key: PORT
+    sync: false
+  region: oregon
+  healthCheckPath: /api/ping
+  domains:
+  - bot.div-an-est-inv-crim.xyz
+  - ana-inec.sytes.net
+  disk:
+    name: AnythingLLM Storage
+    mountPath: /storage
+    sizeGB: 10
+  autoDeploy: false
+version: "1"
